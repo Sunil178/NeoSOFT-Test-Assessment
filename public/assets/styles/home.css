@@ -1,0 +1,82 @@
+body {
+    --background-color: #18181B;
+    --card-border-color: rgba(255, 255, 255, 0.1);
+    --card-box-shadow-1: rgba(0, 0, 0, 0.05);
+    --card-box-shadow-1-y: 3px;
+    --card-box-shadow-1-blur: 6px;
+    --card-box-shadow-2: rgba(0, 0, 0, 0.1);
+    --card-box-shadow-2-y: 8px;
+    --card-box-shadow-2-blur: 15px;
+}
+
+.grid {
+    margin-top: 15vh;
+    display: grid;
+    grid-template-columns: repeat(2, 300px);
+    grid-gap: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.grid a {
+    text-decoration: none;
+}
+
+.card {
+    background-color: var(--background-color);
+    box-shadow: 0px var(--card-box-shadow-1-y) var(--card-box-shadow-1-blur) var(--card-box-shadow-1), 0px var(--card-box-shadow-2-y) var(--card-box-shadow-2-blur) var(--card-box-shadow-2), 0 0 0 1px var(--card-border-color);
+    padding: 56px 16px 16px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.25s;
+    height: 100%;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, .015);
+}
+
+.card .icon {
+    z-index: 2;
+    position: relative;
+    display: table;
+    padding: 8px;
+}
+
+.card .icon i {
+    font-size: xx-large;
+}
+
+.card h4 {
+    z-index: 2;
+    position: relative;
+    margin: 12px 0 4px 0;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 2;
+    color: #FFFFFF;
+}
+
+.card p {
+    z-index: 2;
+    position: relative;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #A1A1AA;
+}
+
+body {
+    display: flex;
+    font-family: "Inter", Arial;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    overflow: hidden;
+}
