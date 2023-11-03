@@ -30,17 +30,16 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $rules = [
+        $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ];
-        if (isset($request->type) && $request->type == "recruiter") {
-            $rules['company'] = ['nullable', 'string', 'max:255'];
-        }
-        $request->validate($rules);
+            'company' => ['required_if:type,recruiter', 'nullable', 'string', 'max:255'],
+        ], [
+            'company.required_if' => 'Company name is required for recruiters',
+        ]);
 
         $user = User::create([
             'first_name' => $request->first_name,

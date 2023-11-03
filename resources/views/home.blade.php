@@ -19,7 +19,7 @@
                 </p>
             </div>
         </a>
-        <a href="{{ route('login', [ 'type' => 'recuiter' ]) }}">
+        <a href="{{ route('login', [ 'type' => 'recruiter' ]) }}">
             <div class="card">
                 <span class="icon"><i class="fa-solid fa-building" style="color: #ffffff;"></i></span>
                 <h4>Recruiter</h4>

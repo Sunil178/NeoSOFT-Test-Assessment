@@ -19,7 +19,7 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -30,6 +30,7 @@
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
 
+        {{-- For Recruiter only --}}
         @if (isset($type['type']) && $type['type'] == 'recruiter')
             <!-- Company -->
             <div class="mt-4">
@@ -38,6 +39,7 @@
                 <x-input-error :messages="$errors->get('company')" class="mt-2" />
             </div>
         @endif
+        {{-- For Recruiter only --}}
 
         <!-- Password -->
         <div class="mt-4">
