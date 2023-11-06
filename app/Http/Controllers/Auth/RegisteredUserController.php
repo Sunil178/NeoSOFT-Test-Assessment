@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
+use App\Mail\AuthenticateUser;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -41,20 +44,42 @@ class RegisteredUserController extends Controller
             'company.required_if' => 'Company name is required for recruiters',
         ]);
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'company' => $request->company,
-            'type' => $request->type == 'recruiter' ? 1 : 2,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $token = Str::uuid();
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'company' => $request->company,
+                'type' => $request->type == 'recruiter' ? 1 : 2,
+                'password' => Hash::make($request->password),
+                'remember_token' => $token,
+            ]);
+
+            // Mail::to('geekyprogrammer178@gmail.com')->send(new AuthenticateUser($token));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Registration failed. Please try again.');
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    public function confirmation($token) {
+        $user = User::where('remember_token', $token)->first();
+
+        if ($user) {
+            $user->update([
+                'email_verified_at' => now(),
+                'remember_token' => null,
+            ]);
+            return redirect('/thank-you');
+        } else {
+            return redirect('/error');
+        }
     }
 }

@@ -1,3 +1,6 @@
+<a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 absolute right-0" href="{{ route('login', @$type['type'] == 'recruiter' ? 'type=candidate' : 'type=recruiter') }}">
+    {{ __(@$type['type'] == 'recruiter' ? 'Switch to candidate?' : 'Switch to recruiter?') }}
+</a>
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -52,3 +55,19 @@
         </div>
     </form>
 </x-guest-layout>
+
+<script>
+    $(document).ready(function() {
+        $('form').validate({
+                rules: {
+                    username: {
+                        required: true,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                    },
+                },
+            });
+        });
+</script>

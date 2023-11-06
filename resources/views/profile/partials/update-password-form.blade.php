@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form id="profile-password-form" method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('put')
 
@@ -46,3 +46,25 @@
         </div>
     </form>
 </section>
+
+<script>
+    $(document).ready(function() {
+        $('#profile-password-form').validate({
+                rules: {
+                    current_password: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    password_confirmation: {
+                        required: true,
+                        minlength: 8,
+                        equalTo: "#password"
+                    },
+                },
+            });
+        });
+</script>

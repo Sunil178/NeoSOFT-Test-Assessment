@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('years');
-            $table->unsignedInteger('months');
-            $table->string('title');
-            $table->string('resume');
+            $table->unsignedInteger('years')->nullable();
+            $table->unsignedInteger('months')->nullable();
+            $table->string('title')->nullable();
+            $table->string('resume')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

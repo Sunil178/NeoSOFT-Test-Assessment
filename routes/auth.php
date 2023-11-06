@@ -56,4 +56,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+
+    Route::get('confirm-registration/{token}', [RegisteredUserController::class, 'confirmation'])->name('confirm-registration');
+
+    Route::get('error', fn () => view('mail.error'));
+    Route::get('thank-you', fn () => view('mail.thank_you'));
 });

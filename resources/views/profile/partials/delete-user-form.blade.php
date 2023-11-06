@@ -15,7 +15,7 @@
     >{{ __('Delete Account') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+        <form id="profile-delete-form" method="post" action="{{ route('profile.destroy') }}" class="p-6">
             @csrf
             @method('delete')
 
@@ -53,3 +53,16 @@
         </form>
     </x-modal>
 </section>
+
+<script>
+    $(document).ready(function() {
+        $('#profile-delete-form').validate({
+                rules: {
+                    password: {
+                        required: true,
+                        minlength: 8,
+                    },
+                },
+            });
+        });
+</script>

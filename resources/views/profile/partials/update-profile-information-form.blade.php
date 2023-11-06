@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+    <form method="post" id="profile-form" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -74,12 +74,12 @@
                 <div class="flex flex-wrap gap-2">
                     <div>
                         <x-input-label for="years" :value="__('Years')" />
-                        <x-text-input id="years" name="years" type="text" class="mt-1 block w-full" :value="old('years', $candidate->years)" required autocomplete="years" />
+                        <x-text-input id="years" name="years" type="text" class="mt-1 block w-full" :value="old('years', $candidate->years)" autocomplete="years" />
                         <x-input-error class="mt-2" :messages="$errors->get('years')" />
                     </div>
                     <div>
                         <x-input-label for="months" :value="__('months')" />
-                        <x-text-input id="months" name="months" type="text" class="mt-1 block w-full" :value="old('months', $candidate->months)" required autocomplete="months" />
+                        <x-text-input id="months" name="months" type="text" class="mt-1 block w-full" :value="old('months', $candidate->months)" autocomplete="months" />
                         <x-input-error class="mt-2" :messages="$errors->get('months')" />
                     </div>
                 </div>
@@ -87,7 +87,7 @@
 
             <div>
                 <x-input-label for="title" :value="__('Title')" />
-                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $candidate->title)" required autocomplete="title" />
+                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $candidate->title)" autocomplete="title" />
                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
             </div>
 
@@ -97,8 +97,7 @@
                     <input type="hidden" name="skills_og" value="{{ json_encode($candidate->skills) }}">
                     <select id="select-skills" name="skills[]" multiple placeholder="Select skills..."
                         autocomplete="off"
-                        class="block @error('skills') border-red-500 @enderror w-96 rounded-sm cursor-pointer focus:outline-none"
-                        required>
+                        class="block @error('skills') border-red-500 @enderror w-96 rounded-sm cursor-pointer focus:outline-none">
                         @foreach ($skills as $skill)
                             <option
                                 value="{{ $skill->id }}"
@@ -142,4 +141,68 @@
 
 <script>
     new TomSelect('#select-skills');
+
+    $(document).ready(function() {
+        $.validator.addMethod("regex", function(value, element, regexp) {
+                if (regexp.constructor != RegExp)
+                    regexp = new RegExp(regexp);
+                else if (regexp.global)
+                    regexp.lastIndex = 0;
+                return this.optional(element) || regexp.test(value);
+            }, "Invalid regex");
+
+        $.validator.addMethod("letters", function(value, element) {
+            return this.optional(element) || value == value.match(/^[a-zA-Z\s]*$/);
+        }, "Characters only");
+
+        $('#register-form').validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                        letters: true,
+                    },
+                    last_name: {
+                        required: true,
+                        letters: true,
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    username: {
+                        required: true,
+                        regex: /^[\w.]+$/i,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    password_confirmation: {
+                        required: true,
+                        minlength: 8,
+                        equalTo: "#password"
+                    },
+                    @isRecruiter
+                    company: {
+                        required: true,
+                    },
+                    @else
+                    years: {
+                        number: true,
+                        minlength: 0,
+                    },
+                    months: {
+                        number: true,
+                        minlength: 0,
+                    },
+                    @endisRecruiter
+                },
+                messages: {
+                    username: {
+                        regex: "Invalid username, can contain letters, numbers and underscore only"
+                    },
+                }
+            });
+        });
+
 </script>
