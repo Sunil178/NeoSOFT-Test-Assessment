@@ -5,7 +5,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <x-text-input type="hidden" name="type" :value="$type['type']" required />
+        <x-text-input type="hidden" name="type" :value="$type['type'] ?? 'candidate'" required />
 
         <!-- Email Address -->
         <div>

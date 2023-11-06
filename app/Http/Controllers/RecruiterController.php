@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 use App\Models\Skill;
 use App\Models\JobSkill;
+use App\Models\CandidateJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\JoinClause;
 
 class RecruiterController extends Controller
 {
@@ -15,7 +18,12 @@ class RecruiterController extends Controller
      */
     public function index()
     {
-        $jobs = Job::where('added_by', Auth::user()->id)->get();
+        $user_id = Auth::user()->id;
+        $applications = CandidateJob::select('job_id', DB::raw('COUNT(user_id) as applications'))
+                                    ->groupBy('job_id');
+        $jobs = Job::leftJoinSub($applications, 'candidate_jobs', function (JoinClause $join) {
+                        $join->on('jobs.id', '=', 'candidate_jobs.job_id');
+                    })->where('added_by', $user_id)->get();
         return view('recruiter.index', [ 'jobs' => $jobs ]);
     }
 

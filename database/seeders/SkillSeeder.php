@@ -23,6 +23,7 @@ class SkillSeeder extends Seeder
         Skill::create([ 'name' => 'Python' ]);
         Skill::create([ 'name' => 'Django' ]);
         Skill::create([ 'name' => 'Machine Learning' ]);
+        Skill::create([ 'name' => 'Ruby' ]);
         Skill::create([ 'name' => 'Rust' ]);
         Skill::create([ 'name' => 'Java' ]);
         Skill::create([ 'name' => 'Spring Boot' ]);

@@ -15,12 +15,17 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $is_recruiter = request()->user()->isRecruiter();
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'company' => [Rule::requiredIf(request()->user()->isRecruiter()), 'nullable', 'string', 'max:255'],
+            'company' => [Rule::requiredIf($is_recruiter), 'nullable', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'years' => ['nullable', 'numeric', 'max:255'],
+            'months' => ['nullable', 'numeric', 'max:255'],
+            'skills' => [ 'nullable', 'array' ],
         ];
     }
 

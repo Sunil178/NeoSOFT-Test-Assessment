@@ -50,4 +50,9 @@ class User extends Authenticatable
     function isRecruiter() {
         return $this->type == 1;
     }
+
+    public function candidate()
+    {
+        return $this->belongsTo(Candidate::class, 'user_id', 'id');
+    }
 }

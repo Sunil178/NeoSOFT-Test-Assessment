@@ -8,7 +8,7 @@
 <div class="mb-6">
     <label class="block">
         <span class="text-white">Description:</span>
-        <x-text-area type="text" name="description" class="block mt-1 w-1/2 h-52 p-2.5"
+        <x-text-area name="description" class="block mt-1 w-1/2 h-52 p-2.5"
             required>{{ __(old('description', $job->description)) }}</x-text-area>
     </label>
     <x-input-error :messages="$errors->get('description')" class="mt-2" />

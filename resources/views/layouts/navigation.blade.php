@@ -16,18 +16,31 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                {{-- For Recruiters --}}
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('job.index')" :active="request()->routeIs('job')">
-                        {{ __('Jobs') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('job.create')" :active="request()->routeIs('job/create')">
-                        {{ __('Post Job') }}
-                    </x-nav-link>
-                </div>
-                {{-- For Recruiters --}}
+                @isRecruiter
+                    {{-- For Recruiters --}}
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('job.index')" :active="request()->routeIs('job')">
+                            {{ __('Jobs') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('job.create')" :active="request()->routeIs('job/create')">
+                            {{ __('Post Job') }}
+                        </x-nav-link>
+                    </div>
+                    {{-- For Recruiters --}}
+                @else
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('candidate.jobs')" :active="request()->routeIs('candidate/jobs')">
+                            {{ __('Jobs') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('candidate.applied')" :active="request()->routeIs('candidate/jobs/applied')">
+                            {{ __('Applied Jobs') }}
+                        </x-nav-link>
+                    </div>
+                @endisRecruiter
             </div>
 
             <!-- Settings Dropdown -->

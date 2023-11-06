@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -60,14 +60,69 @@
         </div>
 
         {{-- For Recruiter only --}}
-        @if (Auth::user()->isRecruiter())
+        @isRecruiter
             <div>
                 <x-input-label for="company" :value="__('Company')" />
                 <x-text-input id="company" name="company" type="text" class="mt-1 block w-full" :value="old('company', $user->company)" required autocomplete="company" />
                 <x-input-error class="mt-2" :messages="$errors->get('company')" />
             </div>
-        @endif
         {{-- For Recruiter only --}}
+        @else
+        {{-- For Candidate only --}}
+            <div>
+                <label class="text-white">Experience</label>
+                <div class="flex flex-wrap gap-2">
+                    <div>
+                        <x-input-label for="years" :value="__('Years')" />
+                        <x-text-input id="years" name="years" type="text" class="mt-1 block w-full" :value="old('years', $candidate->years)" required autocomplete="years" />
+                        <x-input-error class="mt-2" :messages="$errors->get('years')" />
+                    </div>
+                    <div>
+                        <x-input-label for="months" :value="__('months')" />
+                        <x-text-input id="months" name="months" type="text" class="mt-1 block w-full" :value="old('months', $candidate->months)" required autocomplete="months" />
+                        <x-input-error class="mt-2" :messages="$errors->get('months')" />
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <x-input-label for="title" :value="__('Title')" />
+                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $candidate->title)" required autocomplete="title" />
+                <x-input-error class="mt-2" :messages="$errors->get('title')" />
+            </div>
+
+            <div>
+                <label class="block">
+                    <span class="text-white">Skills</span>
+                    <input type="hidden" name="skills_og" value="{{ json_encode($candidate->skills) }}">
+                    <select id="select-skills" name="skills[]" multiple placeholder="Select skills..."
+                        autocomplete="off"
+                        class="block @error('skills') border-red-500 @enderror w-96 rounded-sm cursor-pointer focus:outline-none"
+                        required>
+                        @foreach ($skills as $skill)
+                            <option
+                                value="{{ $skill->id }}"
+                                {{ !is_null($candidate->skills) && in_array($skill->id, old('skills', $candidate->skills)) ? 'selected' : '' }}
+                            >
+                            {{ $skill->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </label>
+                <x-input-error :messages="$errors->get('skills')" class="mt-2" />
+            </div>
+
+            <div>
+                <x-input-label for="resume" :value="__('Resume')" class="mb-3"/>
+                @isset($candidate->resume)
+                    <x-link-button href="{{ asset($candidate->resume) }}" target="_blank" class="mt-4" >{{ __('View') }}</x-link-button>
+                @endisset
+                <input class="block mt-4 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="resume" name="resume" type="file">
+                <x-input-error class="mt-2" :messages="$errors->get('resume')" />
+            </div>
+    
+        @endisRecruiter
+        {{-- For Candidate only --}}
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
@@ -84,3 +139,7 @@
         </div>
     </form>
 </section>
+
+<script>
+    new TomSelect('#select-skills');
+</script>
