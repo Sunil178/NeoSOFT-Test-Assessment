@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedInteger('skill_id');
             $table->timestamps();
 
-            $table->foreign('job_id')->references('id')->on('jobs');
-            $table->foreign('skill_id')->references('id')->on('skills');
+            $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 

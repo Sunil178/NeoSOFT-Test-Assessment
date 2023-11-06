@@ -7,6 +7,12 @@ body {
     --card-box-shadow-2: rgba(0, 0, 0, 0.1);
     --card-box-shadow-2-y: 8px;
     --card-box-shadow-2-blur: 15px;
+    display: flex;
+    font-family: "Inter", Arial;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    overflow: hidden;
 }
 
 .grid {
@@ -72,11 +78,6 @@ body {
     color: #A1A1AA;
 }
 
-body {
-    display: flex;
-    font-family: "Inter", Arial;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--background-color);
-    overflow: hidden;
+footer {
+    position: absolute;
 }

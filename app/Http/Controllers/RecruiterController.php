@@ -57,7 +57,8 @@ class RecruiterController extends Controller
      */
     public function edit(Job $job)
     {
-        return view('recruiter.edit', ['job' => $job]);
+        $skills = Skill::all();
+        return view('recruiter.edit', [ 'skills' => $skills, 'job' => $job]);
     }
 
     /**
