@@ -116,7 +116,7 @@
                 @isset($candidate->resume)
                     <x-link-button href="{{ asset($candidate->resume) }}" target="_blank" class="mt-4" >{{ __('View') }}</x-link-button>
                 @endisset
-                <input class="block mt-4 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="resume" name="resume" type="file">
+                <input class="block mt-4 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="resume" name="resume" type="file" accept="image/*,application/pdf">
                 <x-input-error class="mt-2" :messages="$errors->get('resume')" />
             </div>
     
@@ -155,7 +155,11 @@
             return this.optional(element) || value == value.match(/^[a-zA-Z\s]*$/);
         }, "Characters only");
 
-        $('#register-form').validate({
+        $.validator.addMethod('filesize', function (value, element, param) {
+            return this.optional(element) || (element.files[0].size / 1024 / 1024 <= param)
+        }, 'File size must be less than {0}');
+
+        $('#profile-form').validate({
                 rules: {
                     first_name: {
                         required: true,
@@ -189,11 +193,15 @@
                     @else
                     years: {
                         number: true,
-                        minlength: 0,
+                        min: 0,
                     },
                     months: {
                         number: true,
-                        minlength: 0,
+                        min: 0,
+                    },
+                    resume: {
+                        accept: 'image/*,application/pdf',
+                        filesize: 5,
                     },
                     @endisRecruiter
                 },
@@ -201,6 +209,18 @@
                     username: {
                         regex: "Invalid username, can contain letters, numbers and underscore only"
                     },
+                    @isCandidate
+                    years: {
+                        min: "Experience year should be 0 or more years"
+                    },
+                    months: {
+                        min: "Experience month should be 0 or more months"
+                    },
+                    resume: {
+                        accept: 'Only image and PDFs are allowed',
+                        filesize: 'File size must be less than 5MB',
+                    },
+                    @endisCandidate
                 }
             });
         });

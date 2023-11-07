@@ -40,6 +40,7 @@
                                 <th class="px-6 py-4 flex">
                                     <x-link-button href="{{ route('job.edit', $job->id) }}" class="mt-2" >{{ __('Edit') }}</x-link-button>
                                     <x-link-button href="{{ route('job.show', $job->id) }}" class="mt-2" >{{ __('View') }}</x-link-button>
+                                    <x-link-button href="{{ route('job.users', $job->id) }}" class="mt-2" >{{ __('Applicants') }}</x-link-button>
 
                                     <form class="d-inline" action="{{ route('job.destroy', $job->id) }}" method="POST">
                                         @csrf

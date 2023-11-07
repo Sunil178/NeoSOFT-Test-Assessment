@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\Skill;
 use App\Models\JobSkill;
 use App\Models\CandidateJob;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,9 +43,35 @@ class RecruiterController extends Controller
      */
     public function store(Request $request)
     {
-        $this->inputValidate($request);
+        $request->validate([
+            'title' => [ 'required', 'string' ],
+            'description' => [ 'required', 'string' ],
+            'skills' => [ 'required', 'array' ],
+            'skills.*' => [ 'required', 'numeric' ],
+            'years' => [ 'required', 'numeric', 'min:0' ],
+            'months' => [ 'required', 'numeric', 'min:0' ],
+        ], [
+            'skills.array' => 'Invalid skills',
+            'skills.*.numeric' => 'Invalid skills',
+            'years.numeric' => 'Invalid experience',
+            'months.numeric' => 'Invalid experience',
+        ]);
+
         $job = new Job();
-        $job = $this->upsert($request, $job);
+        $job->title = $request->title;
+        $job->description = $request->description;
+        $job->years = $request->years;
+        $job->months = $request->months;
+        $job->added_by = $request->user()->id;
+        $job->is_saved = $job->save();
+
+        // Store skills - start
+        if (isset($request->skills)) {
+            foreach ($request->skills as $skill_id) {
+                JobSkill::create(['job_id' => $job->id, 'skill_id' => $skill_id]);
+            }
+        }
+        // Store skills - end
 
         if ($job->is_saved)
             return redirect()->route('job.index')->withSuccess('Job post created sucessfully');
@@ -74,8 +101,46 @@ class RecruiterController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        $this->inputValidate($request, $job->id);
-        $job = $this->upsert($request, $job);
+        $request->validate([
+            'title' => [ 'required', 'string' ],
+            'description' => [ 'required', 'string' ],
+            'skills' => [ 'required', 'array' ],
+            'skills.*' => [ 'required', 'numeric' ],
+            'years' => [ 'required', 'numeric', 'min:0' ],
+            'months' => [ 'required', 'numeric', 'min:0' ],
+        ], [
+            'skills.array' => 'Invalid skills',
+            'skills.*.numeric' => 'Invalid skills',
+            'years.numeric' => 'Invalid experience',
+            'months.numeric' => 'Invalid experience',
+        ]);
+
+        $job->title = $request->title;
+        $job->description = $request->description;
+        $job->years = $request->years;
+        $job->months = $request->months;
+        $job->added_by = $request->user()->id;
+        $job->is_saved = $job->save();
+
+        // Edit skills - start
+        if (isset($request->skills) || $request->skills_og != '[]') {
+            $skills_og = json_decode($request->skills_og, true);                        // get the previous original skills
+            $job_skill_deleted_ids = array_diff($skills_og, (array)$request->skills);   // get the deleted skills
+            $job_skill_ids = array_diff((array)$request->skills, $skills_og);           // get the added skills
+
+            // First delete all the removed skills
+            foreach ($job_skill_deleted_ids as $job_skill_deleted_id) {
+                JobSkill::where(['job_id' => $job->id, 'skill_id' => $job_skill_deleted_id])->delete();
+            }
+
+            // Add new skills
+            if (!is_null($request->skills)) {
+                foreach ($job_skill_ids as $job_skill_id) {
+                    JobSkill::firstOrCreate(['job_id' => $job->id, 'skill_id' => $job_skill_id]);
+                }
+            }
+        }
+        // Edit skills - end
 
         if ($job->is_saved)
             return redirect()->route('job.index')->withSuccess('Job post updated sucessfully');
@@ -94,50 +159,25 @@ class RecruiterController extends Controller
         return back()->withErrors('Something went wrong');
     }
 
-    public function inputValidate(Request $request, $id = null)
-    {
-        $request->validate([
-            'title' => [ 'required', 'string' ],
-            'description' => [ 'required', 'string' ],
-            'skills' => [ 'required', 'array' ],
-            'skills.*' => [ 'required', 'numeric' ],
-            'years' => [ 'required', 'numeric', 'min:0' ],
-            'months' => [ 'required', 'numeric', 'min:0' ],
-        ], [
-            'skills.array' => 'Invalid skills',
-            'skills.*.numeric' => 'Invalid skills',
-            'years' => 'Invalid experience',
-            'months' => 'Invalid experience',
-        ]);
+    public function users(Job $job) {
+        if ($job->added_by != request()->user()->id) {
+            return redirect(401);
+        }
+        $candidate_jobs = CandidateJob::with([ 'user', 'user.candidate' ])
+                                    ->where('job_id', $job->id)
+                                    ->get();
+        return view('recruiter.users', [ 'candidate_jobs' => $candidate_jobs ]);
     }
 
-    public function upsert(Request $request, $job)
-    {
-        $job->title = $request->title;
-        $job->description = $request->description;
-        $job->years = $request->years;
-        $job->months = $request->months;
-        $job->added_by = $request->user()->id;
-        $job->is_saved = $job->save();
-
-        // Store and edit skills - start
-        if (isset($request->skills) || $request->skills_og != '[]') {
-            $skills_og = json_decode($request->skills_og, true);
-            $job_skill_deleted_ids = array_diff($skills_og, (array)$request->skills);
-            $job_skill_ids = array_diff((array)$request->skills, $skills_og);
-
-            foreach ($job_skill_deleted_ids as $job_skill_deleted_id) {
-                JobSkill::where(['job_id' => $job->id, 'skill_id' => $job_skill_deleted_id])->delete();
-            }
-
-            if (!is_null($request->skills)) {
-                foreach ($job_skill_ids as $job_skill_id) {
-                    JobSkill::firstOrCreate(['job_id' => $job->id, 'skill_id' => $job_skill_id]);
-                }
-            }
+    public function user(CandidateJob $candidate_job, User $user) {
+        $job = Job::join('candidate_jobs', 'candidate_jobs.job_id', 'jobs.id')
+                ->where('candidate_jobs.id', $candidate_job->id)
+                ->where('candidate_jobs.user_id', $user->id)
+                ->where('jobs.added_by', request()->user()->id)
+                ->first();
+        if (!$job) {
+            return redirect(401);
         }
-        // Store and edit skills - end
-
-        return $job;
+        return view('recruiter.user', [ 'user' => $user, 'candidate_job' => $candidate_job ]);
     }
 }

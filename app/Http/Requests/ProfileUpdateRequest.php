@@ -23,9 +23,10 @@ class ProfileUpdateRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'company' => [Rule::requiredIf($is_recruiter), 'nullable', 'string', 'max:255'],
             'title' => ['nullable', 'string', 'max:255'],
-            'years' => ['nullable', 'numeric', 'max:255'],
-            'months' => ['nullable', 'numeric', 'max:255'],
+            'years' => ['nullable', 'numeric', 'min:0'],
+            'months' => ['nullable', 'numeric', 'min:0'],
             'skills' => [ 'nullable', 'array' ],
+            'resume' => ['nullable', 'mimes:jpeg,jpg,png,gif,svg,bmp,pdf', 'size:5120'],
         ];
     }
 
@@ -38,6 +39,8 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'company.required' => 'Company name is required for recruiters',
+            'resume.mimes' => 'Only image and PDFs are allowed',
+            'resume.size' => 'File size must be less than 5MB',
         ];
     }
 }

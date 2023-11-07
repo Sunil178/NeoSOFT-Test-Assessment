@@ -31,12 +31,12 @@
                     years: {
                         required: true,
                         number: true,
-                        minlength: 0,
+                        min: 0,
                     },
                     months: {
                         required: true,
                         number: true,
-                        minlength: 0,
+                        min: 0,
                     },
                 },
                 messages: {

@@ -16,7 +16,8 @@ class CandidateController extends Controller
     {
         $jobs = Job::select('jobs.*')
                     ->leftJoin('candidate_jobs', 'candidate_jobs.job_id', 'jobs.id')
-                    ->whereNull('candidate_jobs.job_id')
+                    ->where('candidate_jobs.user_id', '!=', request()->user()->id)
+                    ->orWhereNull('candidate_jobs.job_id')
                     ->get();
         return view('recruiter.index', [ 'jobs' => $jobs, 'title' => 'Jobs Available' ]);
     }
