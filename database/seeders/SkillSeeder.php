@@ -13,33 +13,36 @@ class SkillSeeder extends Seeder
      */
     public function run(): void
     {
-        Skill::create([ 'name' => 'PHP' ]);
-        Skill::create([ 'name' => 'Laravel' ]);
-        Skill::create([ 'name' => 'CodeIgniter' ]);
-        Skill::create([ 'name' => 'JavaScript' ]);
-        Skill::create([ 'name' => 'TypeScript' ]);
-        Skill::create([ 'name' => 'React.js' ]);
-        Skill::create([ 'name' => 'Angular' ]);
-        Skill::create([ 'name' => 'Python' ]);
-        Skill::create([ 'name' => 'Django' ]);
-        Skill::create([ 'name' => 'Machine Learning' ]);
-        Skill::create([ 'name' => 'Ruby' ]);
-        Skill::create([ 'name' => 'Rust' ]);
-        Skill::create([ 'name' => 'Java' ]);
-        Skill::create([ 'name' => 'Spring Boot' ]);
-        Skill::create([ 'name' => 'C' ]);
-        Skill::create([ 'name' => 'C++' ]);
-        Skill::create([ 'name' => 'C#' ]);
-        Skill::create([ 'name' => '.Net' ]);
-        Skill::create([ 'name' => 'Flutter' ]);
-        Skill::create([ 'name' => 'Swift' ]);
-        Skill::create([ 'name' => 'MySQL' ]);
-        Skill::create([ 'name' => 'Microsoft SQL Server' ]);
-        Skill::create([ 'name' => 'PostgreSQL' ]);
-        Skill::create([ 'name' => 'MongoDB' ]);
-        Skill::create([ 'name' => 'CockroachDB' ]);
-        Skill::create([ 'name' => 'Git' ]);
-        Skill::create([ 'name' => 'Linux' ]);
-        Skill::create([ 'name' => 'Docker' ]);
+        $timestamps = \Carbon\Carbon::now();
+        Skill::insert([
+            [ 'name' => 'PHP', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Laravel', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'CodeIgniter', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'JavaScript', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'TypeScript', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'React.js', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Angular', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Python', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Django', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Machine Learning', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Ruby', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Rust', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Java', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Spring Boot', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'C', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'C++', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'C#', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => '.Net', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Flutter', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Swift', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'MySQL', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Microsoft SQL Server', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'PostgreSQL', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'MongoDB', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'CockroachDB', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Git', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Linux', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+            [ 'name' => 'Docker', 'created_at' => $timestamps, 'updated_at' => $timestamps ],
+        ]);
     }
 }

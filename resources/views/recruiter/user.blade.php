@@ -62,15 +62,23 @@
                 </span>
             </label>
         </div>
+        <div class="mb-6">
+            <label class="block">
+                <span class="text-white underline">Resume:</span>
+                <span class="block text-white mt-1 w-full p-2.5">
+                    <x-link-button href="{{ asset($user->candidate->resume) }}" target="_blank" class="mt-4" >{{ __('View') }}</x-link-button>
+                </span>
+            </label>
+        </div>
         @isCandidate
-        @if(!isset($applied_job))
-            <div class="mb-6">
-                <x-primary-button data-modal-target="job-apply-modal" data-modal-toggle="job-apply-modal" type="button" id="apply-job" class="text-white bg-blue-600 rounded text-sm px-5 py-2.5">
-                    {{ __('Apply') }}
-                </x-primary-button>
-                <x-job-apply-modal :job_id="$user->id" />
-            </div>
-        @endif
+            @if(!isset($applied_job))
+                <div class="mb-6">
+                    <x-primary-button data-modal-target="job-apply-modal" data-modal-toggle="job-apply-modal" type="button" id="apply-job" class="text-white bg-blue-600 rounded text-sm px-5 py-2.5">
+                        {{ __('Apply') }}
+                    </x-primary-button>
+                    <x-job-apply-modal :job_id="$user->id" />
+                </div>
+            @endif
         @endisCandidate
     </div>
 </x-app-layout>

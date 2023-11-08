@@ -16,7 +16,7 @@
 <div class="mb-6">
     <label class="block">
         <span class="text-white">Skills:</span>
-        <input type="hidden" name="skills_og" value="{{ json_encode($job->skills) }}">
+        <input type="hidden" name="previous_skills" value="{{ json_encode($job->skills) }}">
         <select id="select-skills" name="skills[]" multiple placeholder="Select skills..."
             autocomplete="off"
             class="block @error('skills') border-red-500 @enderror w-96 rounded-sm cursor-pointer focus:outline-none"
@@ -54,4 +54,46 @@
 
 <script>
     new TomSelect('#select-skills');
+
+    $(document).ready(function() {
+        $('#job-form').validate({
+                rules: {
+                    title: {
+                        required: true,
+                    },
+                    description: {
+                        required: true,
+                    },
+                    'skills[]': {
+                        required: true,
+                    },
+                    years: {
+                        required: true,
+                        number: true,
+                        min: 0,
+                        max: 30,
+                    },
+                    months: {
+                        required: true,
+                        number: true,
+                        min: 0,
+                        max: 11,
+                    },
+                },
+                messages: {
+                    "skills[]": {
+                        required: "Any one skills are required",
+                    },
+                    years: {
+                        min: "Experience year should be 0 or more years",
+                        max: "Experience year should not be more than 30 years",
+                    },
+                    months: {
+                        min: "Experience month should be 0 or more months",
+                        max: "Experience month should not be more than 11 months",
+                    },
+                },
+            });
+        });
+
 </script>

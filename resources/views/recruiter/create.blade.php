@@ -15,36 +15,4 @@
 
         </form>
     </div>
-<script>
-    $(document).ready(function() {
-        $('#job-form').validate({
-                rules: {
-                    title: {
-                        required: true,
-                    },
-                    description: {
-                        required: true,
-                    },
-                    'skills[]': {
-                        required: true,
-                    },
-                    years: {
-                        required: true,
-                        number: true,
-                        min: 0,
-                    },
-                    months: {
-                        required: true,
-                        number: true,
-                        min: 0,
-                    },
-                },
-                messages: {
-                    "skills[]": {
-                        required: "Any one skills are required",
-                    },
-                },
-            });
-        });
-</script>
 </x-app-layout>

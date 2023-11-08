@@ -56,10 +56,10 @@ class ProfileController extends Controller
         $candidate->save();
 
         // Store and edit skills - start
-        if (isset($request->skills) || $request->skills_og != '[]') {
-            $skills_og = json_decode($request->skills_og, true);
-            $candidate_skill_deleted_ids = array_diff($skills_og, (array)$request->skills);
-            $candidate_skill_ids = array_diff((array)$request->skills, $skills_og);
+        if (isset($request->skills) || $request->previous_skills != '[]') {
+            $previous_skills = json_decode($request->previous_skills, true);
+            $candidate_skill_deleted_ids = array_diff($previous_skills, (array)$request->skills);
+            $candidate_skill_ids = array_diff((array)$request->skills, $previous_skills);
 
             foreach ($candidate_skill_deleted_ids as $candidate_skill_deleted_id) {
                 CandidateSkill::where(['candidate_id' => $candidate->id, 'skill_id' => $candidate_skill_deleted_id])->delete();

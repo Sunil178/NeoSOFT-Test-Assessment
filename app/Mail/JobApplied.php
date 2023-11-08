@@ -10,17 +10,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
 
-class AuthenticateUser extends Mailable
+class JobApplied extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $token;
+    public $user, $title, $candidate_job_id;
     /**
      * Create a new message instance.
      */
-    public function __construct($token)
+    public function __construct($title, $candidate_job_id, $user)
     {
-        $this->token = $token;
+        $this->title = $title;
+        $this->user = $user;
+        $this->candidate_job_id = $candidate_job_id;
     }
 
     /**
@@ -29,8 +31,11 @@ class AuthenticateUser extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('sunil.thakur@neosoftmail.com', 'Sunil Thakur'),
-            subject: 'User Registration Confirmation',
+            from: new Address(
+                env('MAIL_FROM_ADDRESS', 'geekyprogrammer178@gmail.com'),
+                env('MAIL_FROM_NAME', 'Job Portal')
+            ),
+            subject: 'A candidate applied your posted job',
         );
     }
 
@@ -40,8 +45,8 @@ class AuthenticateUser extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.verification',
-            with: ['token' => $this->token],
+            view: 'mail.job_applied',
+            with: [ 'title' => $this->title, 'candidate_job_id' => $this->candidate_job_id, 'user' => $this->user ],
         );
     }
 

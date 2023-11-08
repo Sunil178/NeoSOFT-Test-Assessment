@@ -94,7 +94,7 @@
             <div>
                 <label class="block">
                     <span class="text-white">Skills</span>
-                    <input type="hidden" name="skills_og" value="{{ json_encode($candidate->skills) }}">
+                    <input type="hidden" name="previous_skills" value="{{ json_encode($candidate->skills) }}">
                     <select id="select-skills" name="skills[]" multiple placeholder="Select skills..."
                         autocomplete="off"
                         class="block @error('skills') border-red-500 @enderror w-96 rounded-sm cursor-pointer focus:outline-none">
@@ -194,10 +194,12 @@
                     years: {
                         number: true,
                         min: 0,
+                        max: 30,
                     },
                     months: {
                         number: true,
                         min: 0,
+                        max: 11,
                     },
                     resume: {
                         accept: 'image/*,application/pdf',
@@ -211,10 +213,12 @@
                     },
                     @isCandidate
                     years: {
-                        min: "Experience year should be 0 or more years"
+                        min: "Experience year should be 0 or more years",
+                        max: "Experience year should not be more than 30 years",
                     },
                     months: {
-                        min: "Experience month should be 0 or more months"
+                        min: "Experience month should be 0 or more months",
+                        max: "Experience month should not be more than 11 months",
                     },
                     resume: {
                         accept: 'Only image and PDFs are allowed',

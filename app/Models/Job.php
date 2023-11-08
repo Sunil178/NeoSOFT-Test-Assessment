@@ -9,6 +9,8 @@ class Job extends Model
 {
     use HasFactory;
 
+    protected $fillable = [ 'title', 'description', 'years', 'months', 'added_by' ];
+
     protected function getSkillsAttribute()
     {
         return JobSkill::where('job_id', $this->id)->pluck('skill_id')->toArray();
@@ -20,5 +22,9 @@ class Job extends Model
                         ->where('job_skills.job_id', $this->id)
                         ->pluck('skills.name')
                         ->toArray();
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
     }
 }

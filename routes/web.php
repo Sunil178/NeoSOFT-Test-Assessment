@@ -36,7 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/candidate/jobs', [CandidateController::class, 'jobs'])->name('candidate.jobs');
     Route::get('/candidate/jobs/applied', [CandidateController::class, 'jobsApplied'])->name('candidate.applied');
     Route::post('/candidate/job/apply', [CandidateController::class, 'applyJob'])->name('candidate.apply');
-    Route::get('/candidate/jobs/{id}', [CandidateController::class, 'job'])->name('candidate.job');
+    Route::get('/candidate/jobs/{job}', [CandidateController::class, 'job'])->name('candidate.job');
 });
 
 require __DIR__.'/auth.php';
+// Route::get('/test', fn() => view('mail.job_applied', [ 'title' => 'YESSS', 'candidate_job_id' => 1, 'user' => \App\Models\User::find(1) ]));

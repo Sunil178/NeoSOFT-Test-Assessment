@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12 px-3">
-        <form method="POST" action="{{ route('job.update', $job->id) }}" class="sm:px-6 lg:px-8">
+        <form method="POST" id="job-form" action="{{ route('job.update', $job->id) }}" class="sm:px-6 lg:px-8">
             @csrf
             @method('put')
             @include('recruiter.form')

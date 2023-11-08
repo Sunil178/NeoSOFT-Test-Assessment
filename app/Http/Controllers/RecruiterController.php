@@ -57,13 +57,10 @@ class RecruiterController extends Controller
             'months.numeric' => 'Invalid experience',
         ]);
 
-        $job = new Job();
-        $job->title = $request->title;
-        $job->description = $request->description;
-        $job->years = $request->years;
-        $job->months = $request->months;
-        $job->added_by = $request->user()->id;
-        $job->is_saved = $job->save();
+        $job = Job::create([
+                    ...$request->only('title', 'description', 'years', 'months'),
+                    ...[ 'added_by' => $request->user()->id ],
+                ]);
 
         // Store skills - start
         if (isset($request->skills)) {
@@ -73,7 +70,7 @@ class RecruiterController extends Controller
         }
         // Store skills - end
 
-        if ($job->is_saved)
+        if ($job->exists)
             return redirect()->route('job.index')->withSuccess('Job post created sucessfully');
 
         return back()->withInput()->withErrors('Something went wrong');
@@ -106,27 +103,29 @@ class RecruiterController extends Controller
             'description' => [ 'required', 'string' ],
             'skills' => [ 'required', 'array' ],
             'skills.*' => [ 'required', 'numeric' ],
-            'years' => [ 'required', 'numeric', 'min:0' ],
-            'months' => [ 'required', 'numeric', 'min:0' ],
+            'years' => [ 'required', 'numeric', 'min:0', 'max:30' ],
+            'months' => [ 'required', 'numeric', 'min:0', 'max:11' ],
         ], [
             'skills.array' => 'Invalid skills',
             'skills.*.numeric' => 'Invalid skills',
             'years.numeric' => 'Invalid experience',
             'months.numeric' => 'Invalid experience',
+            'years.min' => 'Experience year should be 0 or more years',
+            'years.max' => 'Experience year should not be more than 30 years',
+            'months.min' => 'Experience month should be 0 or more months',
+            'months.max' => 'Experience month should not be more than 11 months',
         ]);
 
-        $job->title = $request->title;
-        $job->description = $request->description;
-        $job->years = $request->years;
-        $job->months = $request->months;
-        $job->added_by = $request->user()->id;
-        $job->is_saved = $job->save();
+        $job->update([
+                ...$request->only('title', 'description', 'years', 'months'),
+                ...[ 'added_by' => $request->user()->id ],
+        ]);
 
         // Edit skills - start
-        if (isset($request->skills) || $request->skills_og != '[]') {
-            $skills_og = json_decode($request->skills_og, true);                        // get the previous original skills
-            $job_skill_deleted_ids = array_diff($skills_og, (array)$request->skills);   // get the deleted skills
-            $job_skill_ids = array_diff((array)$request->skills, $skills_og);           // get the added skills
+        if (isset($request->skills) || $request->previous_skills != '[]') {
+            $previous_skills = json_decode($request->previous_skills, true);                        // get the previous original skills
+            $job_skill_deleted_ids = array_diff($previous_skills, (array)$request->skills);   // get the deleted skills
+            $job_skill_ids = array_diff((array)$request->skills, $previous_skills);           // get the added skills
 
             // First delete all the removed skills
             foreach ($job_skill_deleted_ids as $job_skill_deleted_id) {
@@ -142,10 +141,7 @@ class RecruiterController extends Controller
         }
         // Edit skills - end
 
-        if ($job->is_saved)
-            return redirect()->route('job.index')->withSuccess('Job post updated sucessfully');
-
-        return back()->withInput()->withErrors('Something went wrong');
+        return redirect()->route('job.index')->withSuccess('Job post updated sucessfully');
     }
 
     /**
